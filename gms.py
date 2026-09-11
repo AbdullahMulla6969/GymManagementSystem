@@ -1,4 +1,4 @@
-# Gym Management System - Version 1.0 (Basic Operations)
+# Gym Management System - v1.0 (Basic Operations)
 member_records = {}
 
 while True:
