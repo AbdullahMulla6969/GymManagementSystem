@@ -1,8 +1,8 @@
-# Gym Management System - v1.0 (Basic Operations)
+# Gym Management System - Version 2.0 (Added Status Tracking)
 member_records = {}
 
 while True:
-    print("\n=== GYM MANAGEMENT SYSTEM (v1.0) ===")
+    print("\n=== GYM MANAGEMENT SYSTEM (v2.0) ===")
     print("1. Add Member\n2. View Members\n3. Remove Member\n4. Exit")
     choice = input("Choose an option: ").strip()
 
@@ -10,9 +10,12 @@ while True:
         m_id = input("Enter Member ID: ").strip()
         name = input("Enter Member Name: ").strip()
         plan = input("Enter Membership Plan (e.g., Monthly/Yearly): ").strip()
+        # NEW FEATURE: Membership Status
+        status = input("Enter Membership Status (Active/Expired): ").strip()
         
-        member_records[m_id] = f"Name: {name}, Plan: {plan}"
-        print("Member added successfully.")
+        member_records[m_id] = f"Name: {name}, Plan: {plan}, Status: {status}"
+        print("Member saved successfully.")
+
         
     elif choice == "2":
         if not member_records:
