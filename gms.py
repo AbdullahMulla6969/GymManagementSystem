@@ -1,38 +1,77 @@
-# Gym Management System - Version 2.0 (Added Status Tracking)
+# Gym Management System - Version 2.5 (Tkinter GUI Refactor)
+import tkinter as tk
+from tkinter import messagebox, ttk
+
 member_records = {}
 
-while True:
-    print("\n=== GYM MANAGEMENT SYSTEM (v2.0) ===")
-    print("1. Add Member\n2. View Members\n3. Remove Member\n4. Exit")
-    choice = input("Choose an option: ").strip()
-
-    if choice == "1":
-        m_id = input("Enter Member ID: ").strip()
-        name = input("Enter Member Name: ").strip()
-        plan = input("Enter Membership Plan (e.g., Monthly/Yearly): ").strip()
-        # NEW FEATURE: Membership Status
-        status = input("Enter Membership Status (Active/Expired): ").strip()
+def add_member():
+    m_id = id_entry.get().strip()
+    name = name_entry.get().strip()
+    plan = plan_entry.get().strip()
+    status = status_combobox.get()
+    
+    if not m_id or not name or not plan:
+        messagebox.showerror("Error", "All fields are required!")
+        return
         
-        member_records[m_id] = f"Name: {name}, Plan: {plan}, Status: {status}"
-        print("Member saved successfully.")
-
+    if m_id in member_records:
+        messagebox.showerror("Error", "Member ID already exists!")
+        return
         
-    elif choice == "2":
-        if not member_records:
-            print("No members found.")
-        for m_id, details in member_records.items():
-            print(f"ID: {m_id} -> {details}")
-            
-    elif choice == "3":
-        m_id = input("Enter Member ID to remove: ").strip()
-        if m_id in member_records:
-            del member_records[m_id]
-            print("Member removed successfully.")
-        else:
-            print("Member ID not found.")
-            
-    elif choice == "4":
-        print("Exiting system. Goodbye!")
-        break
+    member_records[m_id] = {"name": name, "plan": plan, "status": status}
+    update_listbox()
+    clear_entries()
+    messagebox.showinfo("Success", "Member added successfully.")
+
+def delete_member():
+    m_id = id_entry.get().strip()
+    if m_id in member_records:
+        del member_records[m_id]
+        update_listbox()
+        clear_entries()
+        messagebox.showinfo("Success", "Member removed successfully.")
     else:
-        print("Invalid choice. Try again.")
+        messagebox.showerror("Error", "Member ID not found.")
+
+def update_listbox():
+    listbox.delete(0, tk.END)
+    for m_id, info in member_records.items():
+        listbox.insert(tk.END, f"ID: {m_id} | Name: {info['name']} | Plan: {info['plan']} | Status: {info['status']}")
+
+def clear_entries():
+    id_entry.delete(0, tk.END)
+    name_entry.delete(0, tk.END)
+    plan_entry.delete(0, tk.END)
+
+# Window configuration
+root = tk.Tk()
+root.title("Gym Management System (v2.5)")
+root.geometry("450x450")
+
+# Layout Components
+tk.Label(root, text="Member ID:").pack(pady=2)
+id_entry = tk.Entry(root)
+id_entry.pack()
+
+tk.Label(root, text="Name:").pack(pady=2)
+name_entry = tk.Entry(root)
+name_entry.pack()
+
+tk.Label(root, text="Plan:").pack(pady=2)
+plan_entry = tk.Entry(root)
+plan_entry.pack()
+
+tk.Label(root, text="Status:").pack(pady=2)
+status_combobox = ttk.Combobox(root, values=["Active", "Expired"], state="readonly")
+status_combobox.set("Active")
+status_combobox.pack()
+
+# Control Buttons
+tk.Button(root, text="Add Member", command=add_member, bg="lightgreen").pack(pady=5)
+tk.Button(root, text="Delete Member (by ID)", command=delete_member, bg="lightcoral").pack(pady=5)
+
+# View Display
+listbox = tk.Listbox(root, width=50)
+listbox.pack(pady=10)
+
+root.mainloop()
